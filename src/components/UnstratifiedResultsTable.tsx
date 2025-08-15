@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useMemo } from 'react'; // <-- Import useMemo
+import React, { useMemo } from 'react';
 import { UnstratifiedForecast } from '@/types';
 
 // MUI Components
@@ -8,15 +8,16 @@ import { Box, Typography, Accordion, AccordionSummary, AccordionDetails, Table, 
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 
 interface UnstratifiedResultsTableProps {
-  forecastData: { [vaccineId: string]: UnstratifiedForecast };
+  forecastData: { [vaccineId: string]: UnstratifiedForecast } | null; // Allow null
   onUpdate: (vaccineId: string, targetGroupId: string, year: number, field: 'coverageRate' | 'wastageRate', value: string) => void;
 }
 
 export default function UnstratifiedResultsTable({ forecastData, onUpdate }: UnstratifiedResultsTableProps) {
-  if (!forecastData) return null;
-
-  // --- NEW: Calculate aggregate totals for each vaccine ---
+  // --- FIX: Move the hook to the top level of the component ---
   const aggregateTotals = useMemo(() => {
+    // Handle the case where forecastData might be null inside the hook
+    if (!forecastData) return {};
+
     const totals: { [vaccineId: string]: { [year: number]: { totalAdministered: number, totalWithWastage: number } } } = {};
     Object.values(forecastData).forEach(vaccineForecast => {
       totals[vaccineForecast.id] = {};
@@ -32,6 +33,9 @@ export default function UnstratifiedResultsTable({ forecastData, onUpdate }: Uns
     });
     return totals;
   }, [forecastData]);
+
+  // The early return now happens AFTER all hooks have been called.
+  if (!forecastData) return null;
 
   return (
     <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2, mt: 2 }}>
