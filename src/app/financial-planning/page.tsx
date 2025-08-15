@@ -8,7 +8,7 @@ import ProtectedRoute from '@/components/ProtectedRoute';
 import { CombinedForecast, EquipmentForecast, Vaccine, Equipment, FinancialPlanInventoryInput, FinancialPlanFunder, FinancialPlan } from '@/types';
 
 // MUI Components
-import { Box, Button, Typography, Container, CircularProgress, Paper, Grid, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, TextField, TableFooter, InputAdornment } from '@mui/material';
+import { Box, Button, Typography, Container, CircularProgress, Paper, Grid, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, TextField, TableFooter } from '@mui/material';
 import dayjs, { Dayjs } from 'dayjs';
 import { DatePicker } from '@mui/x-date-pickers';
 
@@ -539,7 +539,6 @@ const fundingTotals = useMemo(() => {
                   </TableContainer>
                 </Paper>
               </Grid>
-{/* --- NEW SECTION: Procurement Calculation --- */}
               <Grid item xs={12}>
                 <Paper sx={{ p: 3 }}>
                   <Typography variant="h6" gutterBottom>2. Recommended & Proposed Procurement for {planningYear}</Typography>
