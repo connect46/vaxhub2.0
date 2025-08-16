@@ -8,7 +8,7 @@ import ProtectedRoute from '@/components/ProtectedRoute';
 import { CombinedForecast, EquipmentForecast, Vaccine, Equipment, FinancialPlanInventoryInput, FinancialPlanFunder, FinancialPlan } from '@/types';
 
 // MUI Components
-import { Box, Button, Typography, Container, CircularProgress, Paper, Grid, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, TextField, TableFooter } from '@mui/material';
+import { Box, Button, Typography, Container, CircularProgress, Paper, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, TextField, TableFooter } from '@mui/material';
 import dayjs, { Dayjs } from 'dayjs';
 import { DatePicker } from '@mui/x-date-pickers';
 
@@ -448,17 +448,17 @@ const fundingTotals = useMemo(() => {
           </Typography>
 
           {loading ? <CircularProgress /> : (
-            <Grid container spacing={4}>
-              <Grid item xs={12}>
-                <Paper sx={{ p: 3 }}>
-                  <Typography variant="h6" gutterBottom>1. Beginning of Year Inventory for {planningYear}</Typography>
+            <Box sx={{ display: 'flex', flexDirection: 'column', gap: 4 }}>
+          {/* Section 1: BOY Inventory */}
+              <Paper sx={{ p: 3 }}>
+                <Typography variant="h6" gutterBottom>1. Beginning of Year Inventory for {planningYear}</Typography>
                   <Box sx={{ my: 2 }}>
-                    <DatePicker 
-                      label="Inventory As-Of Date"
-                      value={asOfDate}
-                      onChange={(date) => setAsOfDate(date)}
-                    />
-                  </Box>
+                  <DatePicker 
+                    label="Inventory As-Of Date"
+                    value={asOfDate}
+                    onChange={(date) => setAsOfDate(date)}
+                  />
+                </Box>
                   <TableContainer component={Paper} variant="outlined">
                     <Table size="small">
                       <TableHead>
@@ -538,9 +538,8 @@ const fundingTotals = useMemo(() => {
                     </Table>
                   </TableContainer>
                 </Paper>
-              </Grid>
-              <Grid item xs={12}>
-                <Paper sx={{ p: 3 }}>
+            {/* Section 2: Recommended & Proposed Procurement */}
+              <Paper sx={{ p: 3 }}>
                   <Typography variant="h6" gutterBottom>2. Recommended & Proposed Procurement for {planningYear}</Typography>
                   <TableContainer component={Paper} variant="outlined">
                     <Table size="small">
@@ -582,22 +581,26 @@ const fundingTotals = useMemo(() => {
                     </Table>
                   </TableContainer>
                 </Paper>
-              </Grid>
-              <Grid item xs={12}>
-                <Paper sx={{ p: 3 }}>
-                  <Typography variant="h6" gutterBottom>2. Proposed Budget for {planningYear}</Typography>
-                  <Grid container spacing={2} sx={{ textAlign: 'center', mt: 1 }}>
-                    <Grid item xs={3}><Typography color="text.secondary">Vaccine Costs</Typography><Typography variant="h5" fontWeight="bold">${vaccineCosts.toLocaleString(undefined, {maximumFractionDigits: 0})}</Typography></Grid>
-                    <Grid item xs={3}><Typography color="text.secondary">Equipment Costs</Typography><Typography variant="h5" fontWeight="bold">${equipmentCosts.toLocaleString(undefined, {maximumFractionDigits: 0})}</Typography></Grid>
-                    <Grid item xs={3}><Typography color="text.secondary">Less: Inventory Value</Typography><Typography variant="h5" fontWeight="bold">(${totalInventoryValue.toLocaleString(undefined, {maximumFractionDigits: 0})})</Typography></Grid>
-                    <Grid item xs={3}><Paper elevation={2} sx={{p: 1, backgroundColor: 'primary.light', color: 'primary.contrastText'}}><Typography>Net Funding Ask</Typography><Typography variant="h5" fontWeight="bold">${netFundingAsk.toLocaleString(undefined, {maximumFractionDigits: 0})}</Typography></Paper></Grid>
-                  </Grid>
-                </Paper>
-              </Grid>
-              {/* --- ADD THIS NEW SECTION FOR FUNDING --- */}
-              <Grid item xs={12}>
-                <Paper sx={{ p: 3 }}>
-                  <Typography variant="h6" gutterBottom>3. Funding Allocation for {planningYear}</Typography>
+            {/* Section 3: Proposed Budget */}
+              <Paper sx={{ p: 3 }}>
+                  <Typography variant="h6" gutterBottom>3. Proposed Budget for {planningYear}</Typography>
+                <Box sx={{ display: 'flex', justifyContent: 'space-around', textAlign: 'center', mt: 1 }}>
+                  <Box>
+                    <Typography color="text.secondary">Vaccine Costs</Typography><Typography variant="h5" fontWeight="bold">${vaccineCosts.toLocaleString(undefined, {maximumFractionDigits: 0})}</Typography>
+                  </Box>
+                  <Box>
+                    <Typography color="text.secondary">Equipment Costs</Typography><Typography variant="h5" fontWeight="bold">${equipmentCosts.toLocaleString(undefined, {maximumFractionDigits: 0})}</Typography>
+                  </Box>
+                  <Box>
+                    <Typography color="text.secondary">Less: Inventory Value</Typography><Typography variant="h5" fontWeight="bold">(${totalInventoryValue.toLocaleString(undefined, {maximumFractionDigits: 0})})</Typography>
+                  </Box>
+                  <Paper elevation={2} sx={{p: 1, backgroundColor: 'primary.light', color: 'primary.contrastText'}}><Typography>Net Funding Ask</Typography><Typography variant="h5" fontWeight="bold">${netFundingAsk.toLocaleString(undefined, {maximumFractionDigits: 0})}</Typography>
+                  </Paper>
+                </Box>
+              </Paper>
+              {/* Section 4: Funding Allocation */}
+              <Paper sx={{ p: 3 }}>
+                <Typography variant="h6" gutterBottom>4. Funding Allocation for {planningYear}</Typography>
                   <TableContainer component={Paper} variant="outlined">
                     <Table size="small">
                       <TableHead>
@@ -635,12 +638,10 @@ const fundingTotals = useMemo(() => {
                     </Table>
                   </TableContainer>
                   <Button size="small" onClick={handleAddFunder} sx={{mt: 1}}>+ Add Funder</Button>
-                </Paper>
-              </Grid>
-              {/* --- NEW: Constrained Forecast Section --- */}
-              <Grid item xs={12}>
+              </Paper>
+              {/* Section 5: Constrained Forecast */}
                 <Paper sx={{ p: 3, backgroundColor: 'primary.light', color: 'primary.contrastText' }} elevation={4}>
-                  <Typography variant="h6" gutterBottom>4. Constrained Forecast for {planningYear}</Typography>
+                <Typography variant="h6" gutterBottom>5. Constrained Forecast for {planningYear}</Typography>
                   <TableContainer component={Paper} variant="outlined">
                     <Table size="small">
                       <TableHead>
@@ -665,13 +666,13 @@ const fundingTotals = useMemo(() => {
                     Overall funding level: {(constrainedForecastData.fundingPercentage * 100).toFixed(1)}%
                   </Typography>
                 </Paper>
-              </Grid>
-              <Grid item xs={12} sx={{ textAlign: 'right' }}>
+              {/* Save Button */}
+              <Box sx={{ textAlign: 'right' }}>
                 <Button variant="contained" color="success" size="large" onClick={handleSaveFinancialPlan} disabled={saving}>
                   {saving ? <CircularProgress size={24} /> : 'Save Financial Plan'}
                 </Button>
-              </Grid>              
-            </Grid>
+              </Box>              
+            </Box>
           )}
         </Box>
       </Container>
