@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useEffect } from 'react';
-import { Program, ProgramVaccine, Vaccine } from '@/types';
+import { Program, ProgramVaccine, Vaccine, DoseAssignment } from '@/types';
 import { useAuth } from '@/context/AuthContext';
 import { db } from '@/lib/firebase';
 import { doc, getDoc, setDoc, addDoc, collection, onSnapshot, Timestamp } from 'firebase/firestore';
@@ -12,7 +12,6 @@ import { Dialog, DialogTitle, DialogContent, DialogActions, TextField, Button, B
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 import AddCircleOutlineIcon from '@mui/icons-material/AddCircleOutline';
 import DeleteIcon from '@mui/icons-material/Delete';
-import Grid from '@mui/material/Grid';
 
 // Define a type for the Target Groups we fetch from the country document
 interface TargetGroup {
@@ -162,8 +161,8 @@ export default function ProgramFormModal({ open, onClose, program }: ProgramForm
       <DialogContent>
         {/* --- Part A: Basic Program Info --- */}
         <Typography variant="h6" sx={{ mt: 2 }}>Program Details</Typography>
-        <Grid container spacing={2} sx={{ mt: 1 }}>
-            <Grid item xs={12} sm={6}>
+        <Box sx={{ display: 'flex', flexWrap: 'wrap', mx: -1, mt: 1 }}>
+            <Box sx={{ p: 1, width: { xs: '100%', sm: '50%' } }}>
                 <FormControl fullWidth>
                     <InputLabel>Category</InputLabel>
                     <Select value={formData.programCategory} label="Category" onChange={(e) => setFormData(p => ({...p, programCategory: e.target.value as any}))}>
@@ -172,11 +171,11 @@ export default function ProgramFormModal({ open, onClose, program }: ProgramForm
                         <MenuItem value="SIA">SIA</MenuItem>
                     </Select>
                 </FormControl>
-            </Grid>
-            <Grid item xs={12} sm={6}><TextField fullWidth label="Program Name" value={formData.programName} onChange={(e) => setFormData(p => ({...p, programName: e.target.value}))} /></Grid>
-            <Grid item xs={12} sm={6}><DatePicker label="Start Date" value={formData.startDate} onChange={(date) => setFormData(p => ({...p, startDate: date}))} sx={{ width: '100%' }}/></Grid>
-            <Grid item xs={12} sm={6}><DatePicker label="End Date" value={formData.endDate} onChange={(date) => setFormData(p => ({...p, endDate: date}))} sx={{ width: '100%' }}/></Grid>
-        </Grid>
+            </Box>
+            <Box sx={{ p: 1, width: { xs: '100%', sm: '50%' } }}><TextField fullWidth label="Program Name" value={formData.programName} onChange={(e) => setFormData(p => ({...p, programName: e.target.value}))} /></Box>
+            <Box sx={{ p: 1, width: { xs: '100%', sm: '50%' } }}><DatePicker label="Start Date" value={formData.startDate} onChange={(date) => setFormData(p => ({...p, startDate: date}))} sx={{ width: '100%' }}/></Box>
+            <Box sx={{ p: 1, width: { xs: '100%', sm: '50%' } }}><DatePicker label="End Date" value={formData.endDate} onChange={(date) => setFormData(p => ({...p, endDate: date}))} sx={{ width: '100%' }}/></Box>
+        </Box>
 
         <Divider sx={{ my: 3 }} />
 
@@ -203,8 +202,8 @@ export default function ProgramFormModal({ open, onClose, program }: ProgramForm
                 const doseNumber = i + 1;
                 const assignment = pv.doseAssignments[doseNumber] || {};
                 return (
-                  <Grid container spacing={2} key={doseNumber} sx={{ alignItems: 'center', mb: 2 }}>
-                    <Grid item xs={12} sm={6}>
+                  <Box key={doseNumber} sx={{ display: 'flex', flexWrap: 'wrap', mx: -1, alignItems: 'center', mb: 2 }}>
+                    <Box sx={{ p: 1, width: { xs: '100%', sm: '50%' } }}>
                       <FormControl fullWidth>
                         <InputLabel>Dose {doseNumber} Target Group</InputLabel>
                         <Select 
@@ -215,22 +214,22 @@ export default function ProgramFormModal({ open, onClose, program }: ProgramForm
                           {availableTargetGroups.map(tg => <MenuItem key={tg.id} value={tg.id}>{tg.name}</MenuItem>)}
                         </Select>
                       </FormControl>
-                    </Grid>
-                    <Grid item xs={6} sm={3}>
-                      <TextField fullWidth label="Coverage" type="number" 
-                        value={(assignment.coverageRate || 0) * 100}
+                    </Box>
+                    <Box sx={{ p: 1, width: { xs: '50%', sm: '25%' } }}>
+                      <TextField fullWidth label="Coverage" type="text"
+                        value={parseFloat(((assignment.coverageRate || 0) * 100).toFixed(2))}
                         onChange={(e) => handleDoseAssignmentChange(pv.vaccineId, doseNumber, 'coverageRate', e.target.value)}
                         InputProps={{ endAdornment: <InputAdornment position="end">%</InputAdornment> }}
                       />
-                    </Grid>
-                    <Grid item xs={6} sm={3}>
-                      <TextField fullWidth label="Wastage" type="number" 
-                        value={(assignment.wastageRate || 0) * 100}
+                    </Box>
+                    <Box sx={{ p: 1, width: { xs: '50%', sm: '25%' } }}>
+                      <TextField fullWidth label="Wastage" type="text"
+                        value={parseFloat(((assignment.wastageRate || 0) * 100).toFixed(2))}
                         onChange={(e) => handleDoseAssignmentChange(pv.vaccineId, doseNumber, 'wastageRate', e.target.value)}
                         InputProps={{ endAdornment: <InputAdornment position="end">%</InputAdornment> }}
                       />
-                    </Grid>
-                  </Grid>
+                    </Box>
+                  </Box>
                 );
               })}
           </Paper>

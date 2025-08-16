@@ -7,7 +7,6 @@ import { doc, setDoc, addDoc, collection } from 'firebase/firestore';
 
 // MUI Components
 import { Dialog, DialogTitle, DialogContent, DialogActions, TextField, Button, Box, CircularProgress, FormControl, InputLabel, Select, MenuItem } from '@mui/material';
-import Grid from '@mui/material/Grid';
 
 interface EquipmentFormModalProps {
   open: boolean;
@@ -70,11 +69,11 @@ export default function EquipmentFormModal({ open, onClose, equipment }: Equipme
       <DialogTitle>{equipment?.id ? 'Edit Equipment' : 'Add New Equipment'}</DialogTitle>
       <DialogContent>
         <Box component="form" sx={{ mt: 2 }}>
-          <Grid container spacing={2}>
-            <Grid item xs={12} sm={6}>
+          <Box sx={{ display: 'flex', flexWrap: 'wrap', mx: -1 }}>
+            <Box sx={{ p: 1, width: { xs: '100%', sm: '50%' } }}>
               <TextField fullWidth name="equipmentName" label="Name" value={formData.equipmentName} onChange={handleChange} />
-            </Grid>
-            <Grid item xs={12} sm={6}>
+            </Box>
+            <Box sx={{ p: 1, width: { xs: '100%', sm: '50%' } }}>
               <FormControl fullWidth>
                 <InputLabel>Type</InputLabel>
                 <Select name="equipmentType" value={formData.equipmentType} label="Type" onChange={handleChange as any}>
@@ -83,20 +82,20 @@ export default function EquipmentFormModal({ open, onClose, equipment }: Equipme
                   <MenuItem value="Safety box">Safety box</MenuItem>
                 </Select>
               </FormControl>
-            </Grid>
-            <Grid item xs={12} sm={6}><TextField fullWidth name="equipmentCode" label="Code" value={formData.equipmentCode} onChange={handleChange} /></Grid>
-            <Grid item xs={12} sm={6}><TextField fullWidth name="equipmentUnits" label="Units (per box)" type="number" value={formData.equipmentUnits} onChange={handleChange} /></Grid>
-            <Grid item xs={12} sm={6}><TextField fullWidth name="equipmentCost" label="Cost (per box)" type="number" value={formData.equipmentCost} onChange={handleChange} /></Grid>
-            <Grid item xs={12} sm={6}><TextField fullWidth name="equipmentFreight" label="Freight (per box)" type="number" value={formData.equipmentFreight} onChange={handleChange} /></Grid>
+            </Box>
+            <Box sx={{ p: 1, width: { xs: '100%', sm: '50%' } }}><TextField fullWidth name="equipmentCode" label="Code" value={formData.equipmentCode} onChange={handleChange} /></Box>
+            <Box sx={{ p: 1, width: { xs: '100%', sm: '50%' } }}><TextField fullWidth name="equipmentUnits" label="Units (per box)" type="number" value={formData.equipmentUnits} onChange={handleChange} /></Box>
+            <Box sx={{ p: 1, width: { xs: '100%', sm: '50%' } }}><TextField fullWidth name="equipmentCost" label="Cost (per box)" type="number" value={formData.equipmentCost} onChange={handleChange} /></Box>
+            <Box sx={{ p: 1, width: { xs: '100%', sm: '50%' } }}><TextField fullWidth name="equipmentFreight" label="Freight (per box)" type="number" value={formData.equipmentFreight} onChange={handleChange} /></Box>
             
             {/* --- Conditional Fields for Safety Box --- */}
             {formData.equipmentType === 'Safety box' && (
               <>
-                <Grid item xs={12} sm={6}><TextField fullWidth name="disposalCapacity" label="Disposal Capacity (syringes/box)" type="number" value={formData.disposalCapacity} onChange={handleChange} /></Grid>
-                <Grid item xs={12} sm={6}><TextField fullWidth name="safetyFactor" label="Safety Factor (%)" type="number" value={formData.safetyFactor} onChange={handleChange} /></Grid>
+                <Box sx={{ p: 1, width: { xs: '100%', sm: '50%' } }}><TextField fullWidth name="disposalCapacity" label="Disposal Capacity (syringes/box)" type="number" value={formData.disposalCapacity} onChange={handleChange} /></Box>
+                <Box sx={{ p: 1, width: { xs: '100%', sm: '50%' } }}><TextField fullWidth name="safetyFactor" label="Safety Factor (%)" type="number" value={formData.safetyFactor} onChange={handleChange} /></Box>
               </>
             )}
-          </Grid>
+            </Box>
         </Box>
       </DialogContent>
       <DialogActions sx={{ p: 3 }}>

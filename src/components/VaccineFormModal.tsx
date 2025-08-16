@@ -14,7 +14,6 @@ import {
     Button, Box, CircularProgress, Typography, InputAdornment, 
     Divider, FormControl, InputLabel, Select, MenuItem, SelectChangeEvent
 } from '@mui/material';
-import Grid from '@mui/material/Grid';
 
 interface VaccineFormModalProps {
   open: boolean;
@@ -91,11 +90,11 @@ export default function VaccineFormModal({ open, onClose, vaccine }: VaccineForm
     finally { setLoading(false); }
   };
 
-  const renderTextField = (id: keyof typeof initialFormState, label: string, props: object = {}) => (
-    <Grid item xs={12} sm={6} md={4}>
-      <TextField fullWidth name={id} label={label} type="number" value={formData[id]} onChange={handleChange} variant="outlined" size="small" {...props} />
-    </Grid>
-  );
+  // const renderTextField = (id: keyof typeof initialFormState, label: string, props: object = {}) => (
+  //   <Grid item xs={12} sm={6} md={4}>
+  //     <TextField fullWidth name={id} label={label} type="number" value={formData[id]} onChange={handleChange} variant="outlined" size="small" {...props} />
+  //   </Grid>
+  // );
 
   return (
     <Dialog open={open} onClose={onClose} maxWidth="md" fullWidth>
@@ -104,80 +103,64 @@ export default function VaccineFormModal({ open, onClose, vaccine }: VaccineForm
         <Box component="form" sx={{ mt: 2 }}>
           {/* --- General Information Section --- */}
           <Typography variant="h6" gutterBottom>General Information</Typography>
-          <Grid container spacing={2}>
-            <Grid item xs={12}><TextField fullWidth name="vaccineName" label="Vaccine Name" type="text" value={formData.vaccineName} onChange={handleChange} variant="outlined" size="small" /></Grid>
-            <Grid item xs={12} md={6}><TextField fullWidth name="vaccineType" label="Vaccine Type" type="text" value={formData.vaccineType} onChange={handleChange} variant="outlined" size="small" /></Grid>
-            {renderTextField('dosesInSchedule', 'Doses in Schedule', { inputProps: { step: 1 } })}
-            {renderTextField('pricePerDose', 'Price per Dose', { InputProps: { startAdornment: <InputAdornment position="start">$</InputAdornment> } })}
-            {renderTextField('vialSize', 'Vial Size', { InputProps: { endAdornment: <InputAdornment position="end">ml</InputAdornment> } })}
-            {renderTextField('dosesPerVial', 'Doses per Vial', { inputProps: { step: 1 } })}
-            {renderTextField('volumePerDose', 'Volume per Dose (cm³)')}
-          </Grid>
+          <Box sx={{ display: 'flex', flexWrap: 'wrap', mx: -1 }}>
+              <Box sx={{ p: 1, width: '100%' }}><TextField fullWidth name="vaccineName" label="Vaccine Name" type="text" value={formData.vaccineName} onChange={handleChange} variant="outlined" size="small" /></Box>
+              <Box sx={{ p: 1, width: { xs: '100%', md: '50%' } }}><TextField fullWidth name="vaccineType" label="Vaccine Type" type="text" value={formData.vaccineType} onChange={handleChange} variant="outlined" size="small" /></Box>
+              <Box sx={{ p: 1, width: { xs: '100%', sm: '50%', md: '33.33%' } }}><TextField fullWidth name="dosesInSchedule" label="Doses in Schedule" type="number" value={formData.dosesInSchedule} onChange={handleChange} variant="outlined" size="small" inputProps={{ step: 1 }} /></Box>
+              <Box sx={{ p: 1, width: { xs: '100%', sm: '50%', md: '33.33%' } }}><TextField fullWidth name="pricePerDose" label="Price per Dose" type="number" value={formData.pricePerDose} onChange={handleChange} variant="outlined" size="small" InputProps={{ startAdornment: <InputAdornment position="start">$</InputAdornment> }} /></Box>
+              <Box sx={{ p: 1, width: { xs: '100%', sm: '50%', md: '33.33%' } }}><TextField fullWidth name="vialSize" label="Vial Size" type="number" value={formData.vialSize} onChange={handleChange} variant="outlined" size="small" InputProps={{ endAdornment: <InputAdornment position="end">ml</InputAdornment> }} /></Box>
+              <Box sx={{ p: 1, width: { xs: '100%', sm: '50%', md: '33.33%' } }}><TextField fullWidth name="dosesPerVial" label="Doses per Vial" type="number" value={formData.dosesPerVial} onChange={handleChange} variant="outlined" size="small" inputProps={{ step: 1 }} /></Box>
+              <Box sx={{ p: 1, width: { xs: '100%', sm: '50%', md: '33.33%' } }}><TextField fullWidth name="volumePerDose" label="Volume per Dose (cm³)" type="number" value={formData.volumePerDose} onChange={handleChange} variant="outlined" size="small" /></Box>
+          </Box>
 
           <Divider sx={{ my: 3 }} />
 
           {/* --- Packaging and Procurement Section --- */}
           <Typography variant="h6" gutterBottom>Packaging & Procurement</Typography>
-          <Grid container spacing={2}>
-            {renderTextField('vialsPerBox', 'Vials per Box', { inputProps: { step: 1 } })}
-            {renderTextField('procurementLeadTime', 'Lead Time (Days)', { inputProps: { step: 1 } })}
-          </Grid>
+          <Box sx={{ display: 'flex', flexWrap: 'wrap', mx: -1 }}>
+              <Box sx={{ p: 1, width: { xs: '100%', sm: '50%' } }}><TextField fullWidth name="vialsPerBox" label="Vials per Box" type="number" value={formData.vialsPerBox} onChange={handleChange} variant="outlined" size="small" inputProps={{ step: 1 }} /></Box>
+              <Box sx={{ p: 1, width: { xs: '100%', sm: '50%' } }}><TextField fullWidth name="procurementLeadTime" label="Lead Time (Days)" type="number" value={formData.procurementLeadTime} onChange={handleChange} variant="outlined" size="small" inputProps={{ step: 1 }} /></Box>
+          </Box>
           
           <Divider sx={{ my: 3 }} />
 
-          {/* --- UPDATED: Ancillary Equipment Section --- */}
+          {/* --- Ancillary Equipment Section --- */}
           <Typography variant="h6" gutterBottom>Ancillary Equipment</Typography>
-          <Grid container spacing={2}>
-            <Grid item xs={12} sm={6}>
+          <Box sx={{ display: 'flex', flexWrap: 'wrap', mx: -1 }}>
+            <Box sx={{ p: 1, width: { xs: '100%', sm: '50%' } }}>
               <FormControl fullWidth size="small">
                 <InputLabel>Administration Syringe</InputLabel>
-                <Select
-                  name="administrationSyringeId"
-                  value={formData.administrationSyringeId}
-                  label="Administration Syringe"
-                  onChange={handleChange}
-                >
+                <Select name="administrationSyringeId" value={formData.administrationSyringeId} label="Administration Syringe" onChange={handleChange}>
                   <MenuItem value=""><em>None</em></MenuItem>
-                  {/* Filter and map over the live syringe data */}
-                  {syringes
-                    .filter(s => s.equipmentType === 'Administration Syringe (ADS)')
-                    .map(syringe => (
-                      <MenuItem key={syringe.id} value={syringe.id}>{syringe.equipmentName}</MenuItem>
+                  {syringes.filter(s => s.equipmentType === 'Administration Syringe (ADS)').map(syringe => (
+                    <MenuItem key={syringe.id} value={syringe.id}>{syringe.equipmentName}</MenuItem>
                   ))}
                 </Select>
               </FormControl>
-            </Grid>
-            <Grid item xs={12} sm={6}>
+            </Box>
+            <Box sx={{ p: 1, width: { xs: '100%', sm: '50%' } }}>
               <FormControl fullWidth size="small">
                 <InputLabel>Dilution Syringe</InputLabel>
-                <Select
-                  name="dilutionSyringeId"
-                  value={formData.dilutionSyringeId}
-                  label="Dilution Syringe"
-                  onChange={handleChange}
-                >
+                <Select name="dilutionSyringeId" value={formData.dilutionSyringeId} label="Dilution Syringe" onChange={handleChange}>
                   <MenuItem value=""><em>None</em></MenuItem>
-                  {/* Filter and map over the live syringe data */}
-                  {syringes
-                    .filter(s => s.equipmentType === 'Dilution Syringe')
-                    .map(syringe => (
-                      <MenuItem key={syringe.id} value={syringe.id}>{syringe.equipmentName}</MenuItem>
+                  {syringes.filter(s => s.equipmentType === 'Dilution Syringe').map(syringe => (
+                    <MenuItem key={syringe.id} value={syringe.id}>{syringe.equipmentName}</MenuItem>
                   ))}
                 </Select>
               </FormControl>
-            </Grid>
-          </Grid>
+            </Box>
+          </Box>
 
           <Divider sx={{ my: 3 }} />
 
           {/* --- Default Inventory Parameters Section --- */}
           <Typography variant="h6" gutterBottom>Default Inventory Parameters</Typography>
-          <Grid container spacing={2}>
-            {renderTextField('bufferStock', 'Buffer Stock (MOS)')}
-            {renderTextField('minInventory', 'Min System Inv. (MOS)')}
-            {renderTextField('absMinInventory', 'Abs. Min Inv. (MOS)')}
-            {renderTextField('maxInventory', 'Max System Inv. (MOS)')}
-          </Grid>
+          <Box sx={{ display: 'flex', flexWrap: 'wrap', mx: -1 }}>
+              <Box sx={{ p: 1, width: { xs: '100%', sm: '50%', md: '25%' } }}><TextField fullWidth name="bufferStock" label="Buffer Stock (MOS)" type="number" value={formData.bufferStock} onChange={handleChange} variant="outlined" size="small" /></Box>
+              <Box sx={{ p: 1, width: { xs: '100%', sm: '50%', md: '25%' } }}><TextField fullWidth name="minInventory" label="Min System Inv. (MOS)" type="number" value={formData.minInventory} onChange={handleChange} variant="outlined" size="small" /></Box>
+              <Box sx={{ p: 1, width: { xs: '100%', sm: '50%', md: '25%' } }}><TextField fullWidth name="absMinInventory" label="Abs. Min Inv. (MOS)" type="number" value={formData.absMinInventory} onChange={handleChange} variant="outlined" size="small" /></Box>
+              <Box sx={{ p: 1, width: { xs: '100%', sm: '50%', md: '25%' } }}><TextField fullWidth name="maxInventory" label="Max System Inv. (MOS)" type="number" value={formData.maxInventory} onChange={handleChange} variant="outlined" size="small" /></Box>
+          </Box>
         </Box>
       </DialogContent>
       <DialogActions sx={{ p: 3 }}>

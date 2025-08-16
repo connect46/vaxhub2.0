@@ -11,7 +11,6 @@ import {
   TableBody, TableCell, TableContainer, TableHead, TableRow,
   CircularProgress, InputAdornment, IconButton, Divider
 } from '@mui/material';
-import Grid from '@mui/material/Grid';
 // MUI Icons
 import DeleteIcon from '@mui/icons-material/Delete';
 import AddCircleOutlineIcon from '@mui/icons-material/AddCircleOutline';
@@ -168,33 +167,25 @@ export default function Demographics() {
       <Typography variant="h5" component="h2" gutterBottom>
         Demographics for {countryName}
       </Typography>
-      <Grid container spacing={3} sx={{ mb: 4 }}>
-        <Grid item xs={12} md={6}>
-          <TextField
-            fullWidth
-            label="Base Population"
-            type="text" // Change to text to allow for commas
-            // FORMATTING FIX: Display number with commas
-            value={basePopulation.toLocaleString()}
-            // FORMATTING FIX: Remove commas before updating state
-            onChange={(e) => setBasePopulation(Number(e.target.value.replace(/,/g, '')))}
-          />
-        </Grid>
-        <Grid item xs={12} md={6}>
-          <TextField
-            fullWidth
-            label="Annual Growth Rate"
-            type="number"
-            // FORMATTING FIX: Display decimal as percentage
-            value={growthRate * 100}
-            // FORMATTING FIX: Convert percentage back to decimal for state
-            onChange={(e) => setGrowthRate(Number(e.target.value) / 100)}
-            InputProps={{
-              endAdornment: <InputAdornment position="end">%</InputAdornment>,
-            }}
-          />
-        </Grid>
-      </Grid>
+      <Box sx={{ display: 'flex', flexDirection: { xs: 'column', md: 'row' }, gap: 3, mb: 4 }}>
+        <TextField
+          fullWidth
+          label="Base Population"
+          type="text"
+          value={basePopulation.toLocaleString()}
+          onChange={(e) => setBasePopulation(Number(e.target.value.replace(/,/g, '')))}
+        />
+        <TextField
+          fullWidth
+          label="Annual Growth Rate"
+          type="text" // Changed to text for better UX
+          value={parseFloat((growthRate * 100).toFixed(2))}
+          onChange={(e) => setGrowthRate(Number(e.target.value) / 100)}
+          InputProps={{
+            endAdornment: <InputAdornment position="end">%</InputAdornment>,
+          }}
+        />
+      </Box>
       
       <Typography variant="h6" component="h3" gutterBottom>
         5-Year Population Forecast
