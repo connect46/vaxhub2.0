@@ -11,9 +11,10 @@ import {
 // MUI Components
 import { 
     Dialog, DialogTitle, DialogContent, DialogActions, TextField, 
-    Button, Grid, Box, CircularProgress, Typography, InputAdornment, 
+    Button, Box, CircularProgress, Typography, InputAdornment, 
     Divider, FormControl, InputLabel, Select, MenuItem, SelectChangeEvent
 } from '@mui/material';
+import Grid from '@mui/material/Grid';
 
 interface VaccineFormModalProps {
   open: boolean;

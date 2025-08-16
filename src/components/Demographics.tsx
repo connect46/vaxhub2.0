@@ -7,10 +7,11 @@ import { doc, getDoc, setDoc } from 'firebase/firestore';
 
 // MUI Components
 import {
-  Box, Button, Grid, Paper, TextField, Typography, Table,
+  Box, Button, Paper, TextField, Typography, Table,
   TableBody, TableCell, TableContainer, TableHead, TableRow,
   CircularProgress, InputAdornment, IconButton, Divider
 } from '@mui/material';
+import Grid from '@mui/material/Grid';
 // MUI Icons
 import DeleteIcon from '@mui/icons-material/Delete';
 import AddCircleOutlineIcon from '@mui/icons-material/AddCircleOutline';

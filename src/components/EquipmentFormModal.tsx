@@ -6,7 +6,8 @@ import { db } from '@/lib/firebase';
 import { doc, setDoc, addDoc, collection } from 'firebase/firestore';
 
 // MUI Components
-import { Dialog, DialogTitle, DialogContent, DialogActions, TextField, Button, Grid, Box, CircularProgress, FormControl, InputLabel, Select, MenuItem } from '@mui/material';
+import { Dialog, DialogTitle, DialogContent, DialogActions, TextField, Button, Box, CircularProgress, FormControl, InputLabel, Select, MenuItem } from '@mui/material';
+import Grid from '@mui/material/Grid';
 
 interface EquipmentFormModalProps {
   open: boolean;

@@ -10,6 +10,7 @@ import { CombinedForecast, EquipmentForecast, Vaccine, Equipment, FinancialPlanI
 // MUI Components
 import { Box, Button, Typography, Container, CircularProgress, Paper, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, TextField, TableFooter } from '@mui/material';
 import dayjs, { Dayjs } from 'dayjs';
+import Grid from '@mui/material/Grid';
 import { DatePicker } from '@mui/x-date-pickers';
 
 const planningYear = new Date().getFullYear() + 1;
