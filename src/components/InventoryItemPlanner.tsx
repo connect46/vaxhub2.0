@@ -2,7 +2,7 @@
 
 import React, { useState, useEffect, useMemo } from 'react';
 import { Paper, Typography, Box, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, TextField, Alert } from "@mui/material";
-import { Line, Bar } from 'react-chartjs-2';
+import { Chart } from 'react-chartjs-2';
 import { Chart as ChartJS, CategoryScale, LinearScale, PointElement, LineElement, BarElement, Title, Tooltip, Legend, Filler } from 'chart.js';
 
 ChartJS.register(CategoryScale, LinearScale, PointElement, LineElement, BarElement, Title, Tooltip, Legend, Filler);
@@ -84,7 +84,7 @@ export default function InventoryItemPlanner({ itemName, boyInventory, monthlyDe
     <Paper sx={{ p: 3, mb: 4 }} variant="outlined">
       <Typography variant="h6" gutterBottom>{itemName}</Typography>
       <Box sx={{ height: '300px', mb: 3 }}>
-        <Bar data={chartData} options={{ responsive: true, maintainAspectRatio: false, scales: { x: { stacked: true }, y: { beginAtZero: true } } }} />
+        <Chart type='bar' data={chartData} options={{ responsive: true, maintainAspectRatio: false, scales: { x: { stacked: true }, y: { beginAtZero: true } } }} />
       </Box>
 
       {isOverBudget && (
