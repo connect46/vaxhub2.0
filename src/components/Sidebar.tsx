@@ -36,16 +36,19 @@ export default function Sidebar() {
       </Box>
       <List component="nav">
         {navItems.map((item) => {
+          // --- FIX: Assign the icon to a capitalized variable ---
+          const Icon = item.icon;
+
           if (item.isSectionHeader) {
             return open && <Typography key={item.title} variant="caption" sx={{ pl: 2.5, py:1, textTransform: 'uppercase', color: 'text.secondary', display: 'block' }}>{item.title}</Typography>;
           }
           if (item.submenu) {
             return (
               <div key={item.title}>
-                {/* Tooltip removed from here */}
                 <ListItemButton onClick={() => handleSubMenuClick(item.title)} sx={{ pl: 2.5 }}>
-                  <ListItemIcon><item.icon /></ListItemIcon>
-                  {open && <ListItemText primary={item.title} />}
+                  {/* Use the new variable and check if it exists */}
+                  <ListItemIcon>{Icon && <Icon />}</ListItemIcon>
+                  <ListItemText primary={item.title} sx={{ opacity: open ? 1 : 0 }} />
                   {open && (openSubMenu === item.title ? <ExpandLess /> : <ExpandMore />)}
                 </ListItemButton>
                 <Collapse in={open && openSubMenu === item.title} timeout="auto" unmountOnExit>
@@ -62,10 +65,10 @@ export default function Sidebar() {
           }
           return (
             <ListItem key={item.title} disablePadding>
-              {/* Tooltip removed from here */}
               <ListItemButton component={Link} href={item.path || '#'} selected={pathname === item.path} sx={{ pl: 2.5 }}>
-                <ListItemIcon><item.icon /></ListItemIcon>
-                {open && <ListItemText primary={item.title} />}
+                {/* Use the new variable and check if it exists */}
+                <ListItemIcon>{Icon && <Icon />}</ListItemIcon>
+                <ListItemText primary={item.title} sx={{ opacity: open ? 1 : 0 }} />
               </ListItemButton>
             </ListItem>
           );
