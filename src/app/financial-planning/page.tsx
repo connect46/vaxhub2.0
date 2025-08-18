@@ -284,35 +284,18 @@ const totalInventoryValue = useMemo(() => {
   }, [vaccines, equipment, combinedForecast, equipmentForecast, vaccineInputs, equipmentInputs, calculatedEquipmentUsage, proposedProcurement, equipmentBuffer]);
 
   const vaccineCosts = useMemo(() => {
-    if (!combinedForecast) return 0;
-    let totalCost = 0;
-    Object.entries(combinedForecast.results).forEach(([vaccineId, yearlyData]) => {
-        const vaccineInfo = vaccines.find(v => v.id === vaccineId);
-        if (vaccineInfo) {
-            const yearData = yearlyData[planningYear];
-            if (yearData) {
-                totalCost += yearData.finalWithWastage * vaccineInfo.pricePerDose;
-            }
-        }
-    });
-    return totalCost;
-  }, [combinedForecast, vaccines]);
+    // Filter procurementData to only include vaccines and sum their 'costOfRecommended'
+    return procurementData
+      .filter(item => vaccines.some(v => v.id === item.id))
+      .reduce((sum, item) => sum + item.costOfRecommended, 0);
+  }, [procurementData, vaccines]);
 
   const equipmentCosts = useMemo(() => {
-    if (!equipmentForecast) return 0;
-    let totalCost = 0;
-    equipmentForecast.results.forEach(program => {
-        program.equipment.forEach(item => {
-            const equipmentInfo = equipment.find(e => e.id === item.equipmentId);
-            if (equipmentInfo) {
-                const quantity = item.yearlyQuantities[planningYear] || 0;
-                const cost = quantity * equipmentInfo.equipmentCost;;
-                totalCost += cost;
-            }
-        });
-    });
-    return totalCost;
-  }, [equipmentForecast, equipment]);
+    // Filter procurementData to only include equipment and sum their 'costOfRecommended'
+    return procurementData
+      .filter(item => equipment.some(e => e.id === item.id))
+      .reduce((sum, item) => sum + item.costOfRecommended, 0);
+  }, [procurementData, equipment]);
 
 const totalProposedProcurementCost = useMemo(() => {
   return procurementData.reduce((sum, item) => sum + item.costOfProposed, 0);
@@ -351,43 +334,24 @@ const fundingTotals = useMemo(() => {
 
   const constrainedForecastData = useMemo(() => {
     const totalCommitted = fundingTotals.totalCommitted;
-    if (!combinedForecast || !equipmentForecast || netFundingAsk <= 0 || totalCommitted <= 0) {
+    if (netFundingAsk <= 0 || totalCommitted <= 0) {
       return { fundingPercentage: 0, forecasts: [] };
     }
   
     const fundingPercentage = Math.min(1, totalCommitted / netFundingAsk);
     
-    const vaccineForecasts = vaccines.map(vaccine => {
-      const originalAdmin = combinedForecast.results[vaccine.id]?.[planningYear]?.finalAdministered || 0;
-      const originalWastage = combinedForecast.results[vaccine.id]?.[planningYear]?.finalWithWastage || 0;
-      
-      return {
-        id: vaccine.id,
-        name: vaccine.vaccineName,
-        original: originalWastage,
-        constrained: originalWastage * fundingPercentage,
-        constrainedAdmin: originalAdmin * fundingPercentage, // <-- ADD THIS
-      };
-    });
-  
-    const equipmentForecasts = equipment.map(item => {
-      const originalForecast = equipmentForecast.results
-        .reduce((sum, program) => {
-            const equipmentItem = program.equipment.find(e => e.equipmentId === item.id);
-            return sum + (equipmentItem?.yearlyQuantities[planningYear] || 0);
-        }, 0);
-
+    // The forecast is now built directly from the procurementData table
+    const forecasts = procurementData.map(item => {
       return {
         id: item.id,
-        name: item.equipmentName,
-        original: originalForecast,
-        constrained: originalForecast * fundingPercentage,
-        constrainedAdmin: originalForecast * fundingPercentage, // For equipment, admin = wastage
+        name: item.name,
+        original: item.recommendedProcurement, // Use the recommended procurement as the new baseline
+        constrained: item.recommendedProcurement * fundingPercentage,
       };
     });
   
-    return { fundingPercentage, forecasts: [...vaccineForecasts, ...equipmentForecasts] };
-  }, [fundingTotals, netFundingAsk, combinedForecast, equipmentForecast, vaccines, equipment]);
+    return { fundingPercentage, forecasts };
+  }, [fundingTotals, netFundingAsk, procurementData]); // Note the updated dependency
 
   const handleSaveFinancialPlan = async () => {
     if (!user || !countryId) return;
@@ -419,7 +383,8 @@ const fundingTotals = useMemo(() => {
         funders,
         proposedProcurement: proposedProcurement as { [key: string]: number },
         constrainedForecast: constrainedForecastData,
-        calculatedEquipmentUsage: calculatedEquipmentUsage,        
+        calculatedEquipmentUsage: calculatedEquipmentUsage,
+        procurementData: procurementData,      
       };
 
       const docId = loadedPlanId || `${countryId}_${planningYear}`;
@@ -648,8 +613,8 @@ const fundingTotals = useMemo(() => {
                       <TableHead>
                         <TableRow>
                           <TableCell>Vaccine</TableCell>
-                          <TableCell align="right">Original Forecast</TableCell>
-                          <TableCell align="right" sx={{ fontWeight: 'bold' }}>Constrained Forecast</TableCell>
+                          <TableCell align="right">Forecasted Procurement</TableCell>
+                          <TableCell align="right" sx={{ fontWeight: 'bold' }}>Constrained Procurement</TableCell>
                         </TableRow>
                       </TableHead>
                       <TableBody>

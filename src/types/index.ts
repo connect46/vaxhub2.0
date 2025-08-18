@@ -278,7 +278,20 @@ export interface FinancialPlan {
       constrainedAdmin?: number; 
     }[];
   };
-  calculatedEquipmentUsage?: { [equipmentId: string]: number };  
+  calculatedEquipmentUsage?: { [equipmentId: string]: number };
+  procurementData?: ProcurementDataItem[];
+}
+
+export interface ProcurementDataItem {
+  id: string;
+  name: string;
+  forecast: number;
+  buffer: number;
+  boyInventory: number;
+  recommendedProcurement: number;
+  costOfRecommended: number;
+  proposedValue: number;
+  costOfProposed: number;
 }
 
 export interface InventoryPlan {
