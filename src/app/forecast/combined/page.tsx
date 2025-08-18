@@ -282,7 +282,7 @@ export default function CombinedForecastPage() {
                           <TableCell align="center" sx={{ fontWeight: 'bold' }}>Confidence (1-5)</TableCell>
                           <TableCell align="center" sx={{ fontWeight: 'bold' }}>Weight (%)</TableCell>
                           <TableCell align="right" sx={{ fontWeight: 'bold' }}>Administered (Weighted)</TableCell>
-                          <TableCell align="right" sx={{ fontWeight: 'bold' }}>Wastage (Weighted)</TableCell>
+                          <TableCell align="right" sx={{ fontWeight: 'bold' }}>With Wastage (Weighted)</TableCell>
                         </TableRow>
                       </TableHead>
                       <TableBody>
