@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { auth } from "@/lib/firebase";
+import { auth, db } from "@/lib/firebase";
 import {
   createUserWithEmailAndPassword,
   signInWithEmailAndPassword,
@@ -15,6 +15,7 @@ import Button from '@mui/material/Button';
 import Link from '@mui/material/Link';
 import Alert from '@mui/material/Alert';
 import CircularProgress from '@mui/material/CircularProgress';
+import { setDoc, doc } from "firebase/firestore";
 
 export default function AuthForm() {
   const [isLogin, setIsLogin] = useState(true);
@@ -31,14 +32,21 @@ export default function AuthForm() {
     try {
       if (isLogin) {
         await signInWithEmailAndPassword(auth, email, password);
-        // In a real app, you'd redirect here. For now, the AuthProvider handles it.
+        // Login success is now handled by the AuthProvider's automatic redirect
       } else {
-        await createUserWithEmailAndPassword(auth, email, password);
-        alert("Account created successfully! Please log in.");
-        setIsLogin(true); // Switch to login form after signup
+        // --- THIS IS THE CORRECTED SIGN-UP LOGIC ---
+        const userCredential = await createUserWithEmailAndPassword(auth, email, password);
+        const newUser = userCredential.user;
+        
+        // This crucial step creates the user's profile in the Firestore 'users' collection
+        await setDoc(doc(db, "users", newUser.uid), {
+          email: newUser.email,
+          role: "country_lead", // Assign a default role
+          country: null,       // Country is null until they complete the next step
+        });
+        // The AuthProvider will now automatically redirect them to /profile-setup
       }
     } catch (err: any) {
-      // Make error messages more user-friendly
       if (err.code === 'auth/user-not-found' || err.code === 'auth/wrong-password') {
         setError('Invalid email or password.');
       } else if (err.code === 'auth/email-already-in-use') {

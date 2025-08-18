@@ -9,6 +9,7 @@ import ShoppingCartIcon from '@mui/icons-material/ShoppingCart';
 import ScienceIcon from '@mui/icons-material/Science';
 import BusinessIcon from '@mui/icons-material/Business';
 import CategoryIcon from '@mui/icons-material/Category';
+import AccountCircleIcon from '@mui/icons-material/AccountCircle';
 import { title } from 'process';
 import path from 'path';
 
@@ -68,4 +69,9 @@ export const navItems = [
     path: '/master-data/programs',
     icon: CategoryIcon,
   },
+  {
+    title: 'User Profile',
+    path: '/user-profile',
+    icon: AccountCircleIcon,
+  },  
 ];

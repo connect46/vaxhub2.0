@@ -290,3 +290,11 @@ export interface InventoryPlan {
   // We'll also store the initial recommendation for reference
   recommendation: { [yearMonth: string]: number }; 
 }
+
+export interface UserProfile {
+  uid: string;
+  email: string;
+  role: 'country_lead' | 'global_lead';
+  country: string;
+  displayName?: string; // Add an optional display name
+}

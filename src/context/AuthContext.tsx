@@ -2,7 +2,9 @@
 
 import { createContext, useContext, useEffect, useState, ReactNode } from "react";
 import { onAuthStateChanged, User } from "firebase/auth";
-import { auth } from "@/lib/firebase";
+import { auth, db } from "@/lib/firebase";
+import { doc, getDoc } from "firebase/firestore";
+import { useRouter, usePathname } from 'next/navigation';
 
 // Define the shape of the context data
 type AuthContextType = {
@@ -10,35 +12,52 @@ type AuthContextType = {
   loading: boolean;
 };
 
-// Create the context with an initial undefined value
+// Create the context
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
 // Create the provider component
 export const AuthProvider = ({ children }: { children: ReactNode }) => {
   const [user, setUser] = useState<User | null>(null);
   const [loading, setLoading] = useState(true);
+  const router = useRouter();
+  const pathname = usePathname();
 
   useEffect(() => {
-    // onAuthStateChanged is a Firebase listener that runs whenever
-    // the user's login state changes.
-    const unsubscribe = onAuthStateChanged(auth, (user) => {
-      setUser(user);
+    const unsubscribe = onAuthStateChanged(auth, async (user) => {
+      if (user) {
+        setUser(user);
+        const userDoc = await getDoc(doc(db, 'users', user.uid));
+        // If user profile exists but country is missing...
+        if (userDoc.exists() && !userDoc.data().country) {
+          // ...redirect to the main user profile page.
+          if (pathname !== '/user-profile') {
+            router.push('/user-profile');
+          }
+        } else if (userDoc.exists() && userDoc.data().country) {
+          // If user has a country and they are on the login page, redirect to dashboard
+          if (pathname === '/login') {
+             router.push('/dashboard');
+          }
+        }
+      } else {
+        setUser(null);
+      }
       setLoading(false);
     });
 
-    // Cleanup function to unsubscribe from the listener when the component unmounts
     return () => unsubscribe();
-  }, []); // The empty array ensures this effect runs only once on mount
+  }, [user, pathname, router]);
 
+  // --- THIS RETURN STATEMENT WAS MISSING ---
   const value = { user, loading };
-
   return (
     <AuthContext.Provider value={value}>
-      {!loading && children}
+      {children}
     </AuthContext.Provider>
   );
-};
+}; // <-- The AuthProvider component ends here.
 
+// --- THE useAuth HOOK WAS MOVED OUTSIDE ---
 // Create a custom hook for easy access to the context
 export const useAuth = () => {
   const context = useContext(AuthContext);
