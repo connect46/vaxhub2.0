@@ -612,7 +612,7 @@ const fundingTotals = useMemo(() => {
                     <Table size="small">
                       <TableHead>
                         <TableRow>
-                          <TableCell>Vaccine</TableCell>
+                          <TableCell>Item</TableCell>
                           <TableCell align="right">Forecasted Procurement</TableCell>
                           <TableCell align="right" sx={{ fontWeight: 'bold' }}>Constrained Procurement</TableCell>
                         </TableRow>
